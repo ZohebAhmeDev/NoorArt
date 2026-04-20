@@ -5,62 +5,65 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Noor Art</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@400;700&family=Cinzel:wght@400;500&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --cream: #f9f5ef;
-      --warm-white: #fdfaf5;
-      --gold: #b8975a;
-      --gold-light: #d4b07a;
-      --dark: #1a1510;
-      --mid: #5c4f3a;
-      --text: #2e2416;
-      --muted: #9a8c78;
-      --border: #e4d9c8;
+      --white: #ffffff;
+      --off-white: #faf8f5;
+      --cream: #f5f0e8;
+      --gold: #b8915a;
+      --gold-light: #d4a96a;
+      --gold-dark: #8a6a38;
+      --dark: #1a1208;
+      --mid: #6b5a3e;
+      --text: #2a1f0e;
+      --muted: #9a8c72;
+      --border: #e8dece;
     }
 
     html { scroll-behavior: smooth; }
 
     body {
-      font-family: 'Jost', sans-serif;
-      background: var(--cream);
+      font-family: 'Raleway', sans-serif;
+      background: var(--off-white);
       color: var(--text);
       overflow-x: hidden;
     }
 
-    /* ── ANNOUNCEMENT BAR ── */
+    /* ── ANNOUNCEMENT ── */
     .announcement {
       background: var(--dark);
-      color: #d4b07a;
+      color: var(--gold-light);
       text-align: center;
-      padding: 10px;
-      font-size: 12px;
-      letter-spacing: 2px;
+      padding: 9px 16px;
+      font-size: 11px;
+      letter-spacing: 3px;
       text-transform: uppercase;
-      font-weight: 300;
+      font-weight: 400;
     }
 
     /* ── NAV ── */
     nav {
-      background: var(--warm-white);
+      background: var(--white);
       border-bottom: 1px solid var(--border);
       position: sticky;
       top: 0;
-      z-index: 100;
+      z-index: 200;
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 0 48px;
       height: 72px;
+      box-shadow: 0 1px 12px rgba(26,18,8,0.06);
     }
 
     .nav-logo {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 28px;
-      font-weight: 600;
-      letter-spacing: 3px;
+      font-family: 'Scheherazade New', serif;
+      font-size: 30px;
+      font-weight: 700;
+      letter-spacing: 4px;
       color: var(--dark);
       text-decoration: none;
       display: flex;
@@ -68,13 +71,12 @@
       gap: 10px;
     }
 
-    .nav-logo span {
+    .nav-logo .dot {
       display: inline-block;
-      width: 6px;
-      height: 6px;
+      width: 5px; height: 5px;
       background: var(--gold);
       border-radius: 50%;
-      margin-bottom: 2px;
+      margin-bottom: 3px;
     }
 
     .nav-links {
@@ -86,145 +88,254 @@
     .nav-links a {
       text-decoration: none;
       color: var(--mid);
-      font-size: 12px;
-      letter-spacing: 2px;
+      font-size: 11px;
+      letter-spacing: 2.5px;
       text-transform: uppercase;
-      font-weight: 400;
+      font-weight: 500;
       transition: color 0.2s;
     }
 
     .nav-links a:hover { color: var(--gold); }
 
-    .nav-right {
-      display: flex;
-      gap: 20px;
-      align-items: center;
+
+    /* Slide image backgrounds */
+    .slide-img-bg {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      transition: transform 8s ease;
+    }
+    .carousel-slide:hover .slide-img-bg { transform: scale(1.04); }
+
+    .slide-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(14,9,2,0.35) 0%,
+        rgba(14,9,2,0.55) 60%,
+        rgba(14,9,2,0.75) 100%
+      );
+      z-index: 1;
     }
 
-    .nav-icon-btn {
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: var(--mid);
-      font-size: 18px;
-      transition: color 0.2s;
-    }
+    .slide-content { z-index: 2; }
 
-    .nav-icon-btn:hover { color: var(--gold); }
-
-    /* ── HERO ── */
-    .hero {
-      position: relative;
-      height: 88vh;
-      min-height: 560px;
+    .slide-placeholder {
+      position: absolute;
+      inset: 0;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
+      gap: 12px;
+      color: rgba(184,145,90,0.4);
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .slide-placeholder.hidden { display: none; }
+
+    /* Slide 1,3 dark | Slide 2 slightly lighter */
+    .slide-1, .slide-3 { background: #1a1208; }
+    .slide-2 { background: #1a1208; }
+
+    /* All slides text light since overlay is always dark */
+    .slide-eyebrow { color: var(--gold-light); }
+    .slide-title { color: #f5ede0; }
+    .slide-title em { color: var(--gold-light); font-style: italic; }
+    .slide-sub { color: #c8b898; }
+
+    /* ── HERO CAROUSEL ── */
+    .hero {
+      position: relative;
+      height: 90vh;
+      min-height: 580px;
       overflow: hidden;
       background: var(--dark);
     }
 
-    .hero-bg {
-      position: absolute;
-      inset: 0;
-      background: 
-        radial-gradient(ellipse at 60% 40%, rgba(184,151,90,0.15) 0%, transparent 60%),
-        radial-gradient(ellipse at 20% 80%, rgba(184,151,90,0.08) 0%, transparent 50%),
-        linear-gradient(135deg, #1a1510 0%, #2c2318 50%, #1a1510 100%);
+    .carousel-track {
+      display: flex;
+      height: 100%;
+      transition: transform 0.8s cubic-bezier(0.77,0,0.18,1);
     }
 
-    .hero-pattern {
-      position: absolute;
-      inset: 0;
-      opacity: 0.04;
-      background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d4b07a' fill-opacity='1'%3E%3Cpath d='M30 30 L15 15 L30 0 L45 15Z M30 30 L45 45 L30 60 L15 45Z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-    }
-
-    .hero-content {
+    .carousel-slide {
+      min-width: 100%;
+      height: 100%;
       position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Slide 1 — product image (set via admin or inline style) */
+    .slide-1 {
+      background: linear-gradient(135deg, #1a1208 0%, #2c1f0a 100%);
+    }
+    .slide-1::after {
+      content:'';
+      position:absolute;inset:0;
+      background: linear-gradient(135deg, rgba(14,9,2,0.78) 0%, rgba(30,20,8,0.65) 100%);
+    }
+
+    /* Slide 2 — product image (set via admin or inline style) */
+    .slide-2 {
+      background: linear-gradient(135deg, #f5f0e8 0%, #ede5d5 100%);
+    }
+    .slide-2::after {
+      content:'';
+      position:absolute;inset:0;
+      background: linear-gradient(135deg, rgba(245,240,228,0.82) 0%, rgba(255,250,240,0.75) 100%);
+    }
+
+    /* Slide 3 — product image */
+    .slide-3 {
+      background: linear-gradient(135deg, #1a1208 0%, #2c1f0a 100%);
+    }
+
+    .slide-content {
+      position: relative;
+      z-index: 2;
       text-align: center;
-      padding: 0 24px;
-      animation: fadeUp 1.2s ease both;
+      padding: 0 32px;
+      animation: fadeUp 1s ease both;
     }
 
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(32px); }
-      to   { opacity: 1; transform: translateY(0); }
+      from { opacity:0; transform:translateY(28px); }
+      to   { opacity:1; transform:translateY(0); }
     }
 
-    .hero-eyebrow {
-      color: var(--gold);
-      font-size: 11px;
+    .slide-eyebrow {
+      font-size: 10px;
       letter-spacing: 5px;
       text-transform: uppercase;
-      font-weight: 400;
+      font-weight: 500;
+      margin-bottom: 18px;
+    }
+
+    .slide-title {
+      font-family: 'Scheherazade New', serif;
+      font-size: clamp(48px, 7vw, 88px);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: 2px;
       margin-bottom: 20px;
     }
 
-    .hero-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(52px, 8vw, 96px);
-      font-weight: 300;
-      color: #f5ede0;
-      line-height: 1.05;
-      letter-spacing: 4px;
-      margin-bottom: 24px;
-    }
-
-    .hero-title em {
-      font-style: italic;
-      color: var(--gold-light);
-    }
-
-    .hero-sub {
-      font-size: 14px;
-      color: #9a8c78;
-      letter-spacing: 1px;
+    .slide-sub {
+      font-size: 13px;
+      letter-spacing: 1.5px;
       margin-bottom: 40px;
       font-weight: 300;
+    }
+
+    /* Slide colors handled globally above */
+
+    /* Hero buttons */
+    .hero-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
     }
 
     .btn-primary {
       display: inline-block;
       background: var(--gold);
-      color: var(--dark);
+      color: white;
       text-decoration: none;
-      padding: 14px 40px;
-      font-size: 11px;
+      padding: 13px 36px;
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-weight: 600;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); }
+
+    .btn-outline-light {
+      display: inline-block;
+      border: 1px solid rgba(255,255,255,0.6);
+      color: rgba(255,255,255,0.9);
+      text-decoration: none;
+      padding: 12px 32px;
+      font-size: 10px;
       letter-spacing: 3px;
       text-transform: uppercase;
       font-weight: 500;
-      transition: background 0.2s, transform 0.2s;
+      transition: all 0.2s;
     }
+    .btn-outline-light:hover { background: rgba(255,255,255,0.15); }
 
-    .btn-primary:hover {
-      background: var(--gold-light);
-      transform: translateY(-1px);
-    }
-
-    .btn-outline {
+    .btn-outline-dark {
       display: inline-block;
       border: 1px solid var(--gold);
-      color: var(--gold);
+      color: var(--gold-dark);
       text-decoration: none;
-      padding: 13px 36px;
-      font-size: 11px;
+      padding: 12px 32px;
+      font-size: 10px;
       letter-spacing: 3px;
       text-transform: uppercase;
-      font-weight: 400;
+      font-weight: 500;
       transition: all 0.2s;
-      margin-left: 16px;
+    }
+    .btn-outline-dark:hover { background: var(--gold); color: white; }
+
+    /* Carousel controls */
+    .carousel-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 10;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: white;
+      width: 48px; height: 48px;
+      font-size: 18px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s;
+      backdrop-filter: blur(4px);
+    }
+    .carousel-btn:hover { background: rgba(255,255,255,0.25); }
+    .carousel-prev { left: 24px; }
+    .carousel-next { right: 24px; }
+
+    .carousel-dots {
+      position: absolute;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      display: flex;
+      gap: 10px;
     }
 
-    .btn-outline:hover {
-      background: var(--gold);
-      color: var(--dark);
+    .carousel-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.4);
+      cursor: pointer;
+      transition: background 0.3s, transform 0.3s;
+      border: none;
+    }
+    .carousel-dot.active {
+      background: var(--gold-light);
+      transform: scale(1.4);
     }
 
     /* ── SECTION HEADER ── */
     .section-header {
       text-align: center;
       padding: 72px 24px 48px;
+      background: var(--off-white);
     }
 
     .section-eyebrow {
@@ -233,12 +344,13 @@
       letter-spacing: 5px;
       text-transform: uppercase;
       margin-bottom: 14px;
+      font-weight: 500;
     }
 
     .section-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(32px, 4vw, 52px);
-      font-weight: 300;
+      font-family: 'Scheherazade New', serif;
+      font-size: clamp(34px, 4vw, 54px);
+      font-weight: 700;
       color: var(--dark);
       letter-spacing: 2px;
     }
@@ -247,61 +359,12 @@
       width: 48px;
       height: 1px;
       background: var(--gold);
-      margin: 20px auto 0;
+      margin: 18px auto 0;
     }
 
-    /* ── CATEGORIES ── */
-    .categories {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 2px;
-      padding: 0 2px 2px;
-    }
+    /* ── GALLERY ── */
+    #gallery { background: var(--off-white); }
 
-    .category-card {
-      position: relative;
-      aspect-ratio: 3/4;
-      overflow: hidden;
-      cursor: pointer;
-      background: #2c2318;
-    }
-
-    .category-card img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.6s ease;
-      opacity: 0.75;
-    }
-
-    .category-card:hover img { transform: scale(1.06); opacity: 0.6; }
-
-    .category-label {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      padding: 40px 24px 24px;
-      background: linear-gradient(transparent, rgba(26,21,16,0.85));
-      color: #f5ede0;
-    }
-
-    .category-label h3 {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 22px;
-      font-weight: 400;
-      letter-spacing: 2px;
-      margin-bottom: 4px;
-    }
-
-    .category-label p {
-      font-size: 11px;
-      letter-spacing: 2px;
-      color: var(--gold-light);
-      text-transform: uppercase;
-    }
-
-    /* ── GALLERY GRID ── */
     .gallery-section { padding: 0 32px 80px; }
 
     .gallery-filters {
@@ -313,29 +376,28 @@
     }
 
     .filter-btn {
-      background: none;
+      background: white;
       border: 1px solid var(--border);
       padding: 8px 20px;
-      font-family: 'Jost', sans-serif;
-      font-size: 11px;
+      font-family: 'Raleway', sans-serif;
+      font-size: 10px;
       letter-spacing: 2px;
       text-transform: uppercase;
       color: var(--mid);
       cursor: pointer;
       transition: all 0.2s;
+      font-weight: 500;
     }
-
     .filter-btn:hover, .filter-btn.active {
       background: var(--dark);
       border-color: var(--dark);
-      color: var(--gold);
+      color: var(--gold-light);
     }
 
     .gallery-grid {
       columns: 4;
       column-gap: 16px;
     }
-
     @media (max-width: 1100px) { .gallery-grid { columns: 3; } }
     @media (max-width: 768px)  { .gallery-grid { columns: 2; } }
     @media (max-width: 480px)  { .gallery-grid { columns: 1; } }
@@ -346,79 +408,80 @@
       position: relative;
       overflow: hidden;
       cursor: pointer;
-      background: #e8dfd2;
+      background: var(--cream);
+      box-shadow: 0 2px 12px rgba(26,18,8,0.08);
+      transition: box-shadow 0.3s, transform 0.3s;
     }
+    .gallery-item:hover { box-shadow: 0 8px 32px rgba(26,18,8,0.16); transform: translateY(-2px); }
 
     .gallery-item img {
       width: 100%;
       display: block;
       transition: transform 0.5s ease;
     }
-
     .gallery-item:hover img { transform: scale(1.04); }
 
     .gallery-item-overlay {
       position: absolute;
       inset: 0;
-      background: rgba(26,21,16,0);
+      background: rgba(14,9,2,0);
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
       padding: 20px;
       transition: background 0.3s;
     }
-
-    .gallery-item:hover .gallery-item-overlay { background: rgba(26,21,16,0.55); }
+    .gallery-item:hover .gallery-item-overlay { background: rgba(14,9,2,0.58); }
 
     .gallery-item-info {
       transform: translateY(10px);
       opacity: 0;
       transition: all 0.3s;
-      color: #f5ede0;
+      color: white;
     }
-
     .gallery-item:hover .gallery-item-info { transform: translateY(0); opacity: 1; }
 
     .gallery-item-info h4 {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 18px;
-      font-weight: 400;
+      font-family: 'Scheherazade New', serif;
+      font-size: 20px;
+      font-weight: 700;
       margin-bottom: 4px;
     }
-
-    .gallery-item-info p { font-size: 12px; color: var(--gold-light); }
+    .gallery-item-info p { font-size: 11px; color: var(--gold-light); letter-spacing: 1px; }
 
     .placeholder-art {
       width: 100%;
+      min-height: 200px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      background: linear-gradient(135deg, #e8dfd2, #d4c9b8);
+      background: var(--cream);
       color: var(--muted);
-      font-size: 13px;
+      font-size: 12px;
       letter-spacing: 1px;
       gap: 8px;
     }
 
-    .placeholder-art svg { opacity: 0.4; }
-
-    /* ── CONTACT / FOOTER ── */
+    /* ── CONTACT ── */
     .contact-section {
-      background: var(--dark);
+      background: #1a1208;
       padding: 80px 48px;
       text-align: center;
+      position: relative;
+      overflow: hidden;
     }
+    .contact-section::before { display: none; }
+    .contact-section > * { position: relative; z-index: 1; }
 
     .contact-section h2 {
-      font-family: 'Cormorant Garamond', serif;
+      font-family: 'Scheherazade New', serif;
       font-size: clamp(28px, 4vw, 48px);
-      font-weight: 300;
+      font-weight: 700;
       color: #f5ede0;
       margin-bottom: 16px;
       letter-spacing: 2px;
     }
-
     .contact-section p { color: var(--muted); margin-bottom: 32px; font-size: 14px; }
 
     .contact-links { display: flex; gap: 24px; justify-content: center; flex-wrap: wrap; }
@@ -433,11 +496,11 @@
       letter-spacing: 1px;
       transition: color 0.2s;
     }
-
     .contact-link:hover { color: var(--gold-light); }
 
+    /* ── FOOTER ── */
     footer {
-      background: #0e0c09;
+      background: #1a1208;
       padding: 24px 48px;
       display: flex;
       justify-content: space-between;
@@ -445,14 +508,13 @@
       flex-wrap: wrap;
       gap: 12px;
     }
-
-    footer p { color: #5c4f3a; font-size: 12px; letter-spacing: 1px; }
-
+    footer p { color: #5c4a2e; font-size: 12px; letter-spacing: 1px; }
     .footer-logo {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 20px;
-      color: #d4b07a;
-      letter-spacing: 3px;
+      font-family: 'Scheherazade New', serif;
+      font-size: 22px;
+      color: var(--gold-light);
+      letter-spacing: 4px;
+      font-weight: 700;
     }
 
     /* ── LIGHTBOX ── */
@@ -460,52 +522,51 @@
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(10,8,6,0.95);
+      background: rgba(10,7,2,0.92);
       z-index: 1000;
       align-items: center;
       justify-content: center;
       padding: 24px;
     }
-
     .lightbox.open { display: flex; }
 
     .lightbox-inner {
       max-width: 880px;
       width: 100%;
-      background: var(--warm-white);
+      background: white;
       display: grid;
       grid-template-columns: 1fr 1fr;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.5);
     }
-
     @media (max-width: 640px) { .lightbox-inner { grid-template-columns: 1fr; } }
 
     .lightbox-img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; }
 
     .lightbox-placeholder {
-      width: 100%;
-      aspect-ratio: 1;
-      background: linear-gradient(135deg, #e8dfd2, #d4c9b8);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      width: 100%; aspect-ratio: 1;
+      background: var(--cream);
+      display: flex; align-items: center; justify-content: center;
       color: var(--muted);
     }
 
-    .lightbox-info { padding: 40px 32px; }
+    .lightbox-info { padding: 40px 32px; background: white; }
 
-    .lightbox-eyebrow { color: var(--gold); font-size: 10px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 12px; }
+    .lightbox-eyebrow { color: var(--gold); font-size: 10px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 12px; display: block; font-weight: 500; }
 
-    .lightbox-title { font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 400; color: var(--dark); margin-bottom: 12px; letter-spacing: 1px; }
+    .lightbox-title {
+      font-family: 'Scheherazade New', serif;
+      font-size: 34px; font-weight: 700;
+      color: var(--dark); margin-bottom: 12px; letter-spacing: 1px;
+    }
 
-    .lightbox-price { font-size: 22px; color: var(--gold); margin-bottom: 20px; font-weight: 300; }
-
-    .lightbox-desc { font-size: 13px; color: var(--mid); line-height: 1.7; margin-bottom: 28px; }
+    .lightbox-price { font-size: 22px; color: var(--gold); margin-bottom: 20px; font-weight: 400; }
+    .lightbox-desc { font-size: 13px; color: var(--mid); line-height: 1.8; margin-bottom: 28px; }
 
     .lightbox-close {
       position: absolute;
       top: 20px; right: 24px;
       background: none; border: none;
-      color: #f5ede0; font-size: 28px;
+      color: white; font-size: 32px;
       cursor: pointer; line-height: 1;
     }
 
@@ -519,29 +580,23 @@
       padding: 12px 24px;
       font-size: 12px;
       letter-spacing: 1px;
-      font-weight: 500;
+      font-weight: 600;
       transition: background 0.2s;
     }
-
     .btn-whatsapp:hover { background: #1ebe5d; }
 
-    /* ── ADMIN PANEL ── */
+    /* ── ADMIN ── */
     .admin-overlay {
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(10,8,6,0.97);
+      background: rgba(10,7,2,0.97);
       z-index: 2000;
       overflow-y: auto;
     }
-
     .admin-overlay.open { display: block; }
 
-    .admin-panel {
-      max-width: 760px;
-      margin: 0 auto;
-      padding: 48px 32px;
-    }
+    .admin-panel { max-width: 760px; margin: 0 auto; padding: 48px 32px; }
 
     .admin-header {
       display: flex;
@@ -549,91 +604,59 @@
       align-items: center;
       margin-bottom: 40px;
     }
-
     .admin-header h2 {
-      font-family: 'Cormorant Garamond', serif;
+      font-family: 'Scheherazade New', serif;
       font-size: 36px;
       color: #f5ede0;
-      font-weight: 300;
+      font-weight: 700;
       letter-spacing: 2px;
     }
-
-    .admin-close {
-      background: none; border: none; color: #f5ede0;
-      font-size: 28px; cursor: pointer;
-    }
+    .admin-close { background: none; border: none; color: #f5ede0; font-size: 28px; cursor: pointer; }
 
     .admin-form {
       background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(212,176,122,0.2);
+      border: 1px solid rgba(184,145,90,0.2);
       padding: 36px;
       margin-bottom: 40px;
     }
+    .admin-form h3 { color: var(--gold); font-size: 11px; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 28px; }
 
-    .admin-form h3 {
-      color: var(--gold);
-      font-size: 11px;
-      letter-spacing: 4px;
-      text-transform: uppercase;
-      margin-bottom: 28px;
-    }
-
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
-
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
     @media (max-width: 540px) { .form-row { grid-template-columns: 1fr; } }
 
     .form-group { margin-bottom: 20px; }
-
-    .form-group label {
-      display: block;
-      color: #9a8c78;
-      font-size: 11px;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      margin-bottom: 8px;
-    }
+    .form-group label { display: block; color: #9a8c72; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
 
     .form-group input,
     .form-group textarea,
     .form-group select {
       width: 100%;
       background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(212,176,122,0.25);
+      border: 1px solid rgba(184,145,90,0.25);
       color: #f5ede0;
       padding: 12px 14px;
-      font-family: 'Jost', sans-serif;
+      font-family: 'Raleway', sans-serif;
       font-size: 14px;
       outline: none;
       transition: border-color 0.2s;
     }
-
     .form-group input:focus,
     .form-group textarea:focus,
     .form-group select:focus { border-color: var(--gold); }
-
     .form-group textarea { min-height: 80px; resize: vertical; }
-
-    .form-group select option { background: #1a1510; }
+    .form-group select option { background: #1a1208; }
 
     .upload-zone {
-      border: 1px dashed rgba(212,176,122,0.4);
+      border: 1px dashed rgba(184,145,90,0.4);
       padding: 40px;
       text-align: center;
       cursor: pointer;
-      transition: border-color 0.2s, background 0.2s;
+      transition: all 0.2s;
       margin-bottom: 20px;
     }
-
-    .upload-zone:hover { border-color: var(--gold); background: rgba(212,176,122,0.04); }
-
+    .upload-zone:hover { border-color: var(--gold); background: rgba(184,145,90,0.04); }
     .upload-zone input { display: none; }
-
     .upload-zone p { color: var(--muted); font-size: 13px; margin-top: 8px; }
-
     .upload-zone .upload-icon { color: var(--gold); font-size: 32px; }
 
     .upload-preview {
@@ -642,136 +665,67 @@
       gap: 8px;
       margin-bottom: 20px;
     }
-
-    .preview-thumb {
-      position: relative;
-      aspect-ratio: 1;
-      overflow: hidden;
-      background: #2c2318;
-    }
-
+    .preview-thumb { position: relative; aspect-ratio: 1; overflow: hidden; background: #2c1f0a; }
     .preview-thumb img { width: 100%; height: 100%; object-fit: cover; }
-
     .preview-remove {
-      position: absolute;
-      top: 2px; right: 2px;
-      background: rgba(0,0,0,0.7);
-      border: none; color: white;
-      width: 20px; height: 20px;
-      font-size: 12px;
-      cursor: pointer;
+      position: absolute; top: 2px; right: 2px;
+      background: rgba(0,0,0,0.7); border: none; color: white;
+      width: 20px; height: 20px; font-size: 12px; cursor: pointer;
       display: flex; align-items: center; justify-content: center;
     }
 
     .btn-add {
-      background: var(--gold);
-      color: var(--dark);
-      border: none;
-      padding: 14px 36px;
-      font-family: 'Jost', sans-serif;
-      font-size: 12px;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      cursor: pointer;
-      font-weight: 500;
-      transition: background 0.2s;
-      width: 100%;
-      margin-top: 8px;
+      background: var(--gold); color: white; border: none;
+      padding: 14px 36px; font-family: 'Raleway', sans-serif;
+      font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+      cursor: pointer; font-weight: 600; transition: background 0.2s;
+      width: 100%; margin-top: 8px;
     }
-
     .btn-add:hover { background: var(--gold-light); }
 
-    /* Items list in admin */
-    .admin-items-list { }
-
     .admin-items-list h3 {
-      color: var(--gold);
-      font-size: 11px;
-      letter-spacing: 4px;
-      text-transform: uppercase;
-      margin-bottom: 20px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid rgba(212,176,122,0.2);
+      color: var(--gold); font-size: 11px; letter-spacing: 4px;
+      text-transform: uppercase; margin-bottom: 20px;
+      padding-bottom: 12px; border-bottom: 1px solid rgba(184,145,90,0.2);
     }
-
     .admin-item-row {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      padding: 12px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
+      display: flex; align-items: center; gap: 16px;
+      padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
     }
-
-    .admin-item-row img {
-      width: 56px;
-      height: 56px;
-      object-fit: cover;
-      flex-shrink: 0;
-      background: #2c2318;
-    }
-
+    .admin-item-row img { width: 56px; height: 56px; object-fit: cover; flex-shrink: 0; }
     .admin-item-row .item-meta { flex: 1; }
-
     .admin-item-row .item-meta strong { color: #f5ede0; font-size: 14px; font-weight: 400; display: block; }
-
     .admin-item-row .item-meta span { color: var(--muted); font-size: 12px; }
-
     .btn-delete {
-      background: none;
-      border: 1px solid rgba(255,80,80,0.3);
-      color: rgba(255,120,120,0.7);
-      padding: 6px 12px;
-      font-size: 11px;
-      cursor: pointer;
-      letter-spacing: 1px;
-      transition: all 0.2s;
+      background: none; border: 1px solid rgba(255,80,80,0.3);
+      color: rgba(255,120,120,0.7); padding: 6px 12px;
+      font-size: 11px; cursor: pointer; letter-spacing: 1px; transition: all 0.2s;
     }
-
-    .btn-delete:hover { background: rgba(255,80,80,0.15); border-color: rgba(255,80,80,0.6); color: #ff8888; }
+    .btn-delete:hover { background: rgba(255,80,80,0.15); color: #ff8888; }
 
     .toast {
-      position: fixed;
-      bottom: 32px;
-      left: 50%;
+      position: fixed; bottom: 32px; left: 50%;
       transform: translateX(-50%) translateY(80px);
-      background: var(--dark);
-      color: var(--gold);
-      border: 1px solid rgba(212,176,122,0.3);
-      padding: 14px 28px;
-      font-size: 12px;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      z-index: 9999;
-      transition: transform 0.4s ease;
+      background: var(--dark); color: var(--gold);
+      border: 1px solid rgba(184,145,90,0.3);
+      padding: 14px 28px; font-size: 11px;
+      letter-spacing: 2px; text-transform: uppercase;
+      z-index: 9999; transition: transform 0.4s ease;
     }
-
     .toast.show { transform: translateX(-50%) translateY(0); }
 
-    /* Hero buttons wrapper */
-    .hero-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .hero-buttons .btn-outline { margin-left: 0; }
-
-    /* Mobile nav */
+    /* ── MOBILE ── */
     @media (max-width: 768px) {
       nav { padding: 0 20px; }
       .nav-links { display: none; }
-      .hero-content { padding: 0 20px; }
-      .hero-buttons { flex-direction: column; gap: 10px; }
-      .hero-buttons .btn-primary,
-      .hero-buttons .btn-outline { width: 220px; text-align: center; }
+      .hero-buttons { flex-direction: column; align-items: center; }
+      .btn-primary, .btn-outline-light, .btn-outline-dark { width: 200px; text-align: center; }
       .gallery-section { padding: 0 16px 60px; }
-      footer { padding: 20px; flex-direction: column; align-items: flex-start; }
       .contact-section { padding: 60px 24px; }
+      footer { padding: 20px; flex-direction: column; }
+      .carousel-btn { display: none; }
     }
 
-    /* Smooth scroll padding */
     #gallery { scroll-margin-top: 80px; }
   </style>
 </head>
@@ -782,30 +736,86 @@
 
 <!-- NAV -->
 <nav>
-  <a href="#" class="nav-logo">
-    <span></span>NOOR ART<span></span>
-  </a>
+  <a href="#" class="nav-logo"><span class="dot"></span>NOOR ART<span class="dot"></span></a>
   <ul class="nav-links">
     <li><a href="#">Home</a></li>
     <li><a href="#gallery">Gallery</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
-  <div class="nav-right">
-  </div>
+  <div></div>
 </nav>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-bg"></div>
-  <div class="hero-pattern"></div>
-  <div class="hero-content">
-    <p class="hero-eyebrow">Islamic Art · Calligraphy · Digital Prints</p>
-    <h1 class="hero-title">Art Rooted in <em>Meaning</em></h1>
-    <p class="hero-sub">Beautiful calligraphy and Islamic art, crafted for your home</p>
-    <div class="hero-buttons">
-      <a href="#gallery" class="btn-primary">Explore Gallery</a>
-      <a href="#contact" class="btn-outline">Get in Touch</a>
+<!-- HERO CAROUSEL -->
+<section class="hero" id="hero">
+  <div class="carousel-track" id="carouselTrack">
+
+    <!-- Slide 1 -->
+    <div class="carousel-slide slide-1" id="slide-0">
+      <div class="slide-img-bg" id="slideBg0"></div>
+      <div class="slide-overlay"></div>
+      <div class="slide-content" id="slideContent0">
+        <p class="slide-eyebrow" id="slideEyebrow0">Islamic Art · Calligraphy · Digital Prints</p>
+        <h1 class="slide-title" id="slideTitle0">Art Rooted in <em>Meaning</em></h1>
+        <p class="slide-sub" id="slideSub0">Beautiful calligraphy and Islamic art, crafted for your home</p>
+        <div class="hero-buttons">
+          <a href="#gallery" class="btn-primary">Explore Gallery</a>
+          <a href="#contact" class="btn-outline-light">Get in Touch</a>
+        </div>
+      </div>
+      <div class="slide-placeholder" id="slidePlaceholder0">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(184,145,90,0.4)" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+        <p>Add image via Admin Panel</p>
+      </div>
     </div>
+
+    <!-- Slide 2 -->
+    <div class="carousel-slide slide-2" id="slide-1">
+      <div class="slide-img-bg" id="slideBg1"></div>
+      <div class="slide-overlay"></div>
+      <div class="slide-content" id="slideContent1">
+        <p class="slide-eyebrow" id="slideEyebrow1">Handcrafted · Original · Unique</p>
+        <h1 class="slide-title" id="slideTitle1">Where <em>Beauty</em> Meets Faith</h1>
+        <p class="slide-sub" id="slideSub1">Every piece is a conversation between art and the divine</p>
+        <div class="hero-buttons">
+          <a href="#gallery" class="btn-primary">View Collection</a>
+          <a href="#contact" class="btn-outline-light">Commission a Piece</a>
+        </div>
+      </div>
+      <div class="slide-placeholder" id="slidePlaceholder1">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(184,145,90,0.4)" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+        <p>Add image via Admin Panel</p>
+      </div>
+    </div>
+
+    <!-- Slide 3 -->
+    <div class="carousel-slide slide-3" id="slide-2">
+      <div class="slide-img-bg" id="slideBg2"></div>
+      <div class="slide-overlay"></div>
+      <div class="slide-content" id="slideContent2">
+        <p class="slide-eyebrow" id="slideEyebrow2">Custom Orders Welcome</p>
+        <h1 class="slide-title" id="slideTitle2"><em>نور</em> — Light</h1>
+        <p class="slide-sub" id="slideSub2">Named after the divine light that guides and inspires all creation</p>
+        <div class="hero-buttons">
+          <a href="#gallery" class="btn-primary">See the Gallery</a>
+          <a href="#contact" class="btn-outline-light">WhatsApp Us</a>
+        </div>
+      </div>
+      <div class="slide-placeholder" id="slidePlaceholder2">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(184,145,90,0.4)" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+        <p>Add image via Admin Panel</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Controls -->
+  <button class="carousel-btn carousel-prev" onclick="moveCarousel(-1)">&#8592;</button>
+  <button class="carousel-btn carousel-next" onclick="moveCarousel(1)">&#8594;</button>
+
+  <div class="carousel-dots">
+    <button class="carousel-dot active" onclick="goToSlide(0)"></button>
+    <button class="carousel-dot" onclick="goToSlide(1)"></button>
+    <button class="carousel-dot" onclick="goToSlide(2)"></button>
   </div>
 </section>
 
@@ -816,19 +826,13 @@
     <h2 class="section-title">The Gallery</h2>
     <div class="section-line"></div>
   </div>
-
   <div class="gallery-section">
     <div class="gallery-filters" id="filtersBar">
       <button class="filter-btn active" onclick="filterGallery('all', this)">All</button>
-      <!-- Dynamic filter buttons added here -->
     </div>
-
-    <div class="gallery-grid" id="galleryGrid">
-      <!-- Items rendered by JS -->
-    </div>
-
+    <div class="gallery-grid" id="galleryGrid"></div>
     <p id="emptyMsg" style="text-align:center;color:var(--muted);font-size:14px;letter-spacing:1px;padding:60px 0;display:none;">
-      No artworks yet. Open the admin panel (⚙) to add your first piece.
+      No artworks yet. Visit <strong style="color:var(--gold)">/index.html#admin</strong> to add your first piece.
     </p>
   </div>
 </section>
@@ -842,11 +846,11 @@
       <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
       WhatsApp
     </a>
-    <a href="/cdn-cgi/l/email-protection#ec8283839e8d9e98ac89818d8580c28f8381" class="contact-link">
+    <a href="mailto:hello@noorart.co.za" class="contact-link">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
       Email Us
     </a>
-    <a href="https://instagram.com/noorart" target="_blank" class="contact-link">
+    <a href="https://instagram.com/noorarts.in" target="_blank" class="contact-link">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
       Instagram
     </a>
@@ -865,7 +869,7 @@
   <div class="lightbox-inner">
     <div id="lbImgWrap"></div>
     <div class="lightbox-info">
-      <p class="lightbox-eyebrow" id="lbCategory">Art</p>
+      <span class="lightbox-eyebrow" id="lbCategory">Art</span>
       <h2 class="lightbox-title" id="lbTitle">Artwork Title</h2>
       <p class="lightbox-price" id="lbPrice"></p>
       <p class="lightbox-desc" id="lbDesc"></p>
@@ -877,37 +881,32 @@
   </div>
 </div>
 
-<!-- LOGIN SCREEN (shown when visiting /admin) -->
-<div id="loginOverlay" style="display:none;position:fixed;inset:0;background:#0e0c09;z-index:3000;align-items:center;justify-content:center;flex-direction:column;">
+<!-- LOGIN SCREEN -->
+<div id="loginOverlay" style="display:none;position:fixed;inset:0;background:#0a0600;z-index:3000;align-items:center;justify-content:center;flex-direction:column;">
   <div style="text-align:center;padding:48px 32px;max-width:420px;width:100%;">
-    <!-- Logo -->
-    <div style="font-family:'Cormorant Garamond',serif;font-size:32px;letter-spacing:6px;color:#d4b07a;margin-bottom:8px;">NOOR ART</div>
-    <div style="color:#5c4f3a;font-size:11px;letter-spacing:4px;text-transform:uppercase;margin-bottom:48px;">Admin Access</div>
-    <!-- Lock icon -->
+    <div style="font-family:'Scheherazade New',serif;font-size:34px;letter-spacing:6px;color:#d4a96a;margin-bottom:8px;font-weight:700;">NOOR ART</div>
+    <div style="color:#5c4a2e;font-size:11px;letter-spacing:4px;text-transform:uppercase;margin-bottom:48px;">Admin Access</div>
     <div style="margin-bottom:32px;">
-      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#b8975a" stroke-width="1" stroke-linecap="round">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#b8915a" stroke-width="1" stroke-linecap="round">
         <rect x="3" y="11" width="18" height="11" rx="2"/>
         <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-        <circle cx="12" cy="16" r="1" fill="#b8975a" stroke="none"/>
+        <circle cx="12" cy="16" r="1" fill="#b8915a" stroke="none"/>
       </svg>
     </div>
-    <!-- Password input -->
     <div style="margin-bottom:16px;">
       <input id="loginPassword" type="password" placeholder="Enter password"
-        style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(184,151,90,0.3);color:#f5ede0;padding:14px 18px;font-family:'Jost',sans-serif;font-size:14px;letter-spacing:1px;outline:none;text-align:center;"
-        onfocus="this.style.borderColor='#b8975a'" onblur="this.style.borderColor='rgba(184,151,90,0.3)'">
+        style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(184,145,90,0.3);color:#f5ede0;padding:14px 18px;font-family:'Raleway',sans-serif;font-size:14px;letter-spacing:1px;outline:none;text-align:center;"
+        onfocus="this.style.borderColor='#b8915a'" onblur="this.style.borderColor='rgba(184,145,90,0.3)'">
     </div>
     <p id="loginError" style="display:none;color:#e07070;font-size:12px;letter-spacing:1px;margin-bottom:16px;">Incorrect password. Please try again.</p>
-    <!-- Login button -->
     <button onclick="attemptLogin()"
-      style="width:100%;background:#b8975a;color:#1a1510;border:none;padding:14px;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:3px;text-transform:uppercase;font-weight:500;cursor:pointer;transition:background 0.2s;"
-      onmouseover="this.style.background='#d4b07a'" onmouseout="this.style.background='#b8975a'">
+      style="width:100%;background:#b8915a;color:white;border:none;padding:14px;font-family:'Raleway',sans-serif;font-size:11px;letter-spacing:3px;text-transform:uppercase;font-weight:600;cursor:pointer;"
+      onmouseover="this.style.background='#d4a96a'" onmouseout="this.style.background='#b8915a'">
       Unlock Admin Panel
     </button>
-    <!-- Back link -->
     <div style="margin-top:28px;">
-      <a href="/" style="color:#5c4f3a;font-size:11px;letter-spacing:2px;text-decoration:none;text-transform:uppercase;"
-        onmouseover="this.style.color='#b8975a'" onmouseout="this.style.color='#5c4f3a'">← Back to Gallery</a>
+      <a href="#" onclick="document.getElementById('loginOverlay').style.display='none';document.body.style.overflow='';"
+        style="color:#5c4a2e;font-size:11px;letter-spacing:2px;text-decoration:none;text-transform:uppercase;">← Back to Gallery</a>
     </div>
   </div>
 </div>
@@ -919,31 +918,43 @@
       <h2>Admin Panel</h2>
       <button class="admin-close" onclick="toggleAdmin()">×</button>
     </div>
-
-    <!-- Add Item Form -->
     <div class="admin-form">
-      <h3>Add New Artwork</h3>
+      <!-- Carousel Image Manager -->
+      <div style="margin-bottom:32px;padding:28px;border:1px solid rgba(184,145,90,0.2);background:rgba(255,255,255,0.03);">
+        <h3 style="color:var(--gold);font-size:11px;letter-spacing:4px;text-transform:uppercase;margin-bottom:20px;">Hero Carousel Images</h3>
+        <p style="color:#9a8c72;font-size:12px;margin-bottom:20px;line-height:1.6;">Upload a product image for each carousel slide. These appear as the hero background on your homepage.</p>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
+          <div id="carouselSlot0" style="aspect-ratio:16/9;background:rgba(255,255,255,0.04);border:1px dashed rgba(184,145,90,0.3);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;gap:8px;font-size:10px;color:#9a8c72;letter-spacing:1px;text-transform:uppercase;transition:all 0.2s;overflow:hidden;position:relative;" onclick="triggerSlideUpload(0)" onmouseover="this.style.borderColor='#b8915a'" onmouseout="this.style.borderColor='rgba(184,145,90,0.3)'">
+            <span style="font-size:20px;">🖼</span><span>Slide 1</span>
+          </div>
+          <div id="carouselSlot1" style="aspect-ratio:16/9;background:rgba(255,255,255,0.04);border:1px dashed rgba(184,145,90,0.3);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;gap:8px;font-size:10px;color:#9a8c72;letter-spacing:1px;text-transform:uppercase;transition:all 0.2s;overflow:hidden;position:relative;" onclick="triggerSlideUpload(1)" onmouseover="this.style.borderColor='#b8915a'" onmouseout="this.style.borderColor='rgba(184,145,90,0.3)'">
+            <span style="font-size:20px;">🖼</span><span>Slide 2</span>
+          </div>
+          <div id="carouselSlot2" style="aspect-ratio:16/9;background:rgba(255,255,255,0.04);border:1px dashed rgba(184,145,90,0.3);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;gap:8px;font-size:10px;color:#9a8c72;letter-spacing:1px;text-transform:uppercase;transition:all 0.2s;overflow:hidden;position:relative;" onclick="triggerSlideUpload(2)" onmouseover="this.style.borderColor='#b8915a'" onmouseout="this.style.borderColor='rgba(184,145,90,0.3)'">
+            <span style="font-size:20px;">🖼</span><span>Slide 3</span>
+          </div>
+        </div>
+        <input type="file" id="slideFileInput" accept="image/*" style="display:none" onchange="handleSlideUpload(this)">
+      </div>
 
+      <h3>Add New Artwork</h3>
       <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
         <div class="upload-icon">🖼</div>
         <p>Click to upload image(s)</p>
         <p style="font-size:11px;margin-top:4px;">JPG, PNG, WEBP · Multiple allowed</p>
         <input type="file" id="fileInput" accept="image/*" multiple onchange="handleFiles(this.files)">
       </div>
-
       <div class="upload-preview" id="uploadPreview"></div>
-
       <div class="form-row">
         <div class="form-group">
           <label>Artwork Title *</label>
-          <input type="text" id="iTitle" placeholder="e.g. Golden Dawn">
+          <input type="text" id="iTitle" placeholder="e.g. Bismillah Gold">
         </div>
         <div class="form-group">
           <label>Price (optional)</label>
           <input type="text" id="iPrice" placeholder="e.g. R850">
         </div>
       </div>
-
       <div class="form-row">
         <div class="form-group">
           <label>Category</label>
@@ -965,16 +976,12 @@
           </select>
         </div>
       </div>
-
       <div class="form-group">
         <label>Description (optional)</label>
         <textarea id="iDesc" placeholder="Tell the story of this piece..."></textarea>
       </div>
-
       <button class="btn-add" onclick="addItem()">+ Add to Gallery</button>
     </div>
-
-    <!-- Items List -->
     <div class="admin-items-list">
       <h3>Current Items (<span id="itemCount">0</span>)</h3>
       <div id="adminItemsList"></div>
@@ -984,51 +991,67 @@
 
 <div class="toast" id="toast"></div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-  // ── DATA STORE ──
+<script>
+  // ── DATA ──
   let items = JSON.parse(localStorage.getItem('noorart_items') || '[]');
   let pendingFiles = [];
   let currentFilter = 'all';
 
-  function save() {
-    localStorage.setItem('noorart_items', JSON.stringify(items));
+  function save() { localStorage.setItem('noorart_items', JSON.stringify(items)); }
+
+  // ── CAROUSEL ──
+  let currentSlide = 0;
+  const totalSlides = 3;
+  let autoplayTimer;
+
+  function updateCarousel() {
+    document.getElementById('carouselTrack').style.transform = `translateX(${-currentSlide * 100}%)`;
+    document.querySelectorAll('.carousel-dot').forEach((d, i) => {
+      d.classList.toggle('active', i === currentSlide);
+    });
   }
 
-  // ── RENDER GALLERY ──
+  function moveCarousel(dir) {
+    currentSlide = (currentSlide + dir + totalSlides) % totalSlides;
+    updateCarousel();
+    resetAutoplay();
+  }
+
+  function goToSlide(n) {
+    currentSlide = n;
+    updateCarousel();
+    resetAutoplay();
+  }
+
+  function resetAutoplay() {
+    clearInterval(autoplayTimer);
+    autoplayTimer = setInterval(() => moveCarousel(1), 5000);
+  }
+
+  // Touch/swipe support
+  let touchStartX = 0;
+  document.getElementById('hero').addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+  document.getElementById('hero').addEventListener('touchend', e => {
+    const diff = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) moveCarousel(diff > 0 ? 1 : -1);
+  });
+
+  // ── GALLERY ──
   function renderGallery() {
     const grid = document.getElementById('galleryGrid');
     const empty = document.getElementById('emptyMsg');
     const filtered = currentFilter === 'all' ? items : items.filter(i => i.category === currentFilter);
-
     grid.innerHTML = '';
+    empty.style.display = items.length === 0 ? 'block' : 'none';
 
-    if (items.length === 0) {
-      empty.style.display = 'block';
-    } else {
-      empty.style.display = 'none';
-    }
-
-    filtered.forEach((item, idx) => {
+    filtered.forEach(item => {
       const div = document.createElement('div');
       div.className = 'gallery-item';
       div.onclick = () => openLightbox(item);
-
       const imgHtml = item.image
         ? `<img src="${item.image}" alt="${item.title}" loading="lazy">`
-        : `<div class="placeholder-art" style="min-height:200px;">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-            <span style="font-size:11px;letter-spacing:1px;">${item.title}</span>
-           </div>`;
-
-      div.innerHTML = `
-        ${imgHtml}
-        <div class="gallery-item-overlay">
-          <div class="gallery-item-info">
-            <h4>${item.title}</h4>
-            <p>${item.price || item.category}${item.status === 'Sold' ? ' · SOLD' : ''}</p>
-          </div>
-        </div>`;
-
+        : `<div class="placeholder-art"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><span style="font-size:11px;">${item.title}</span></div>`;
+      div.innerHTML = `${imgHtml}<div class="gallery-item-overlay"><div class="gallery-item-info"><h4>${item.title}</h4><p>${item.price || item.category}${item.status === 'Sold' ? ' · SOLD' : ''}</p></div></div>`;
       grid.appendChild(div);
     });
 
@@ -1036,12 +1059,11 @@
     renderAdminList();
   }
 
-  // ── FILTER BUTTONS ──
   function renderFilters() {
     const bar = document.getElementById('filtersBar');
-    const categories = [...new Set(items.map(i => i.category))];
+    const cats = [...new Set(items.map(i => i.category))];
     bar.innerHTML = `<button class="filter-btn ${currentFilter==='all'?'active':''}" onclick="filterGallery('all',this)">All</button>`;
-    categories.forEach(cat => {
+    cats.forEach(cat => {
       const btn = document.createElement('button');
       btn.className = 'filter-btn' + (currentFilter === cat ? ' active' : '');
       btn.textContent = cat;
@@ -1063,8 +1085,7 @@
     document.getElementById('lbTitle').textContent = item.title;
     document.getElementById('lbPrice').textContent = item.price || '';
     document.getElementById('lbDesc').textContent = item.desc || 'Original artwork by Noor Art.';
-    const wrap = document.getElementById('lbImgWrap');
-    wrap.innerHTML = item.image
+    document.getElementById('lbImgWrap').innerHTML = item.image
       ? `<img class="lightbox-img" src="${item.image}" alt="${item.title}">`
       : `<div class="lightbox-placeholder"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg></div>`;
     const msg = encodeURIComponent(`Hi! I'm interested in "${item.title}"${item.price ? ' ('+item.price+')' : ''}. Can you tell me more?`);
@@ -1089,32 +1110,22 @@
   function handleFiles(files) {
     Array.from(files).forEach(file => {
       const reader = new FileReader();
-      reader.onload = e => {
-        pendingFiles.push({ name: file.name, data: e.target.result });
-        renderPreviews();
-      };
+      reader.onload = e => { pendingFiles.push({ name: file.name, data: e.target.result }); renderPreviews(); };
       reader.readAsDataURL(file);
     });
   }
 
   function renderPreviews() {
-    const wrap = document.getElementById('uploadPreview');
-    wrap.innerHTML = pendingFiles.map((f, i) => `
-      <div class="preview-thumb">
-        <img src="${f.data}" alt="">
-        <button class="preview-remove" onclick="removePending(${i})">×</button>
-      </div>`).join('');
+    document.getElementById('uploadPreview').innerHTML = pendingFiles.map((f, i) =>
+      `<div class="preview-thumb"><img src="${f.data}" alt=""><button class="preview-remove" onclick="removePending(${i})">×</button></div>`
+    ).join('');
   }
 
-  function removePending(i) {
-    pendingFiles.splice(i, 1);
-    renderPreviews();
-  }
+  function removePending(i) { pendingFiles.splice(i, 1); renderPreviews(); }
 
   function addItem() {
     const title = document.getElementById('iTitle').value.trim();
     if (!title) { showToast('Please enter a title'); return; }
-
     const base = {
       id: Date.now(),
       title,
@@ -1123,7 +1134,6 @@
       status: document.getElementById('iStatus').value,
       desc: document.getElementById('iDesc').value.trim(),
     };
-
     if (pendingFiles.length === 0) {
       items.unshift({ ...base, image: null });
     } else {
@@ -1131,10 +1141,7 @@
         items.unshift({ ...base, id: Date.now() + idx, title: pendingFiles.length > 1 ? `${title} ${idx+1}` : title, image: f.data });
       });
     }
-
-    save();
-    pendingFiles = [];
-    renderPreviews();
+    save(); pendingFiles = []; renderPreviews();
     document.getElementById('iTitle').value = '';
     document.getElementById('iPrice').value = '';
     document.getElementById('iDesc').value = '';
@@ -1143,133 +1150,54 @@
   }
 
   function deleteItem(id) {
-    if (!confirm('Remove this artwork from the gallery?')) return;
+    if (!confirm('Remove this artwork?')) return;
     items = items.filter(i => i.id !== id);
-    save();
-    renderGallery();
-    showToast('Artwork removed');
+    save(); renderGallery(); showToast('Artwork removed');
   }
 
   function renderAdminList() {
     const list = document.getElementById('adminItemsList');
     document.getElementById('itemCount').textContent = items.length;
-    if (items.length === 0) {
-      list.innerHTML = '<p style="color:var(--muted);font-size:13px;padding:20px 0;">No artworks yet.</p>';
-      return;
-    }
+    if (items.length === 0) { list.innerHTML = '<p style="color:var(--muted);font-size:13px;padding:20px 0;">No artworks yet.</p>'; return; }
     list.innerHTML = items.map(item => `
       <div class="admin-item-row">
-        ${item.image
-          ? `<img src="${item.image}" alt="${item.title}">`
-          : `<div style="width:56px;height:56px;background:#2c2318;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5c4f3a" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg></div>`}
+        ${item.image ? `<img src="${item.image}" alt="">` : `<div style="width:56px;height:56px;background:#2c1f0a;flex-shrink:0;"></div>`}
         <div class="item-meta">
           <strong>${item.title}</strong>
-          <span>${item.category}${item.price ? ' · ' + item.price : ''}${item.status !== 'Available' ? ' · ' + item.status : ''}</span>
+          <span>${item.category}${item.price ? ' · '+item.price : ''}${item.status !== 'Available' ? ' · '+item.status : ''}</span>
         </div>
         <button class="btn-delete" onclick="deleteItem(${item.id})">Remove</button>
       </div>`).join('');
   }
 
-  // ── TOAST ──
   function showToast(msg) {
     const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.classList.add('show');
+    t.textContent = msg; t.classList.add('show');
     setTimeout(() => t.classList.remove('show'), 2800);
   }
 
-  // ── DRAG & DROP on upload zone ──
+  // ── DRAG DROP ──
   const zone = document.getElementById('uploadZone');
   zone.addEventListener('dragover', e => { e.preventDefault(); zone.style.borderColor = 'var(--gold)'; });
   zone.addEventListener('dragleave', () => { zone.style.borderColor = ''; });
-  zone.addEventListener('drop', e => {
-    e.preventDefault();
-    zone.style.borderColor = '';
-    handleFiles(e.dataTransfer.files);
-  });
+  zone.addEventListener('drop', e => { e.preventDefault(); zone.style.borderColor = ''; handleFiles(e.dataTransfer.files); });
 
-  // ── SAMPLE CARD (shows on first load only) ──
+  // ── SAMPLE CARD ──
   function loadSampleIfEmpty() {
     if (items.length > 0) return;
-    const sampleSVG = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(`
-<svg xmlns="http://www.w3.org/2000/svg" width="600" height="750" viewBox="0 0 600 750">
-  <defs>
-    <radialGradient id="bg" cx="50%" cy="40%" r="60%">
-      <stop offset="0%" stop-color="#2c2318"/>
-      <stop offset="100%" stop-color="#0e0c09"/>
-    </radialGradient>
-    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#b8975a" stop-opacity="0.25"/>
-      <stop offset="100%" stop-color="#b8975a" stop-opacity="0"/>
-    </radialGradient>
-  </defs>
-  <!-- Background -->
-  <rect width="600" height="750" fill="url(#bg)"/>
-  <!-- Glow -->
-  <ellipse cx="300" cy="340" rx="260" ry="280" fill="url(#glow)"/>
-  <!-- Outer border frame -->
-  <rect x="30" y="30" width="540" height="690" fill="none" stroke="#b8975a" stroke-width="1" opacity="0.5"/>
-  <rect x="42" y="42" width="516" height="666" fill="none" stroke="#b8975a" stroke-width="0.5" opacity="0.3"/>
-  <!-- Corner ornaments -->
-  <g stroke="#b8975a" stroke-width="1.5" fill="none" opacity="0.8">
-    <path d="M30,30 L70,30 M30,30 L30,70"/>
-    <path d="M570,30 L530,30 M570,30 L570,70"/>
-    <path d="M30,720 L70,720 M30,720 L30,680"/>
-    <path d="M570,720 L530,720 M570,720 L570,680"/>
-  </g>
-  <!-- Diamond ornament top -->
-  <g transform="translate(300,90)">
-    <polygon points="0,-18 10,-5 0,8 -10,-5" fill="#b8975a" opacity="0.9"/>
-    <line x1="-50" y1="0" x2="-18" y2="0" stroke="#b8975a" stroke-width="0.8" opacity="0.6"/>
-    <line x1="18" y1="0" x2="50" y2="0" stroke="#b8975a" stroke-width="0.8" opacity="0.6"/>
-  </g>
-  <!-- Main Arabic/Bismillah styled text - Bismillah -->
-  <text x="300" y="260" text-anchor="middle" font-family="Georgia, serif" font-size="68" fill="#d4b07a" opacity="0.95" letter-spacing="6">بِسْمِ اللّٰهِ</text>
-  <!-- Subtitle Arabic -->
-  <text x="300" y="340" text-anchor="middle" font-family="Georgia, serif" font-size="36" fill="#b8975a" opacity="0.8" letter-spacing="4">الرَّحْمَٰنِ الرَّحِيمِ</text>
-  <!-- Divider line -->
-  <line x1="160" y1="385" x2="440" y2="385" stroke="#b8975a" stroke-width="0.8" opacity="0.5"/>
-  <circle cx="300" cy="385" r="3" fill="#b8975a" opacity="0.7"/>
-  <!-- English translation -->
-  <text x="300" y="430" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#9a8c78" letter-spacing="3">In the name of Allah</text>
-  <text x="300" y="458" text-anchor="middle" font-family="Georgia, serif" font-size="15" fill="#9a8c78" letter-spacing="3">The Most Gracious, The Most Merciful</text>
-  <!-- Diamond ornament bottom -->
-  <g transform="translate(300,650)">
-    <polygon points="0,-18 10,-5 0,8 -10,-5" fill="#b8975a" opacity="0.9"/>
-    <line x1="-50" y1="0" x2="-18" y2="0" stroke="#b8975a" stroke-width="0.8" opacity="0.6"/>
-    <line x1="18" y1="0" x2="50" y2="0" stroke="#b8975a" stroke-width="0.8" opacity="0.6"/>
-  </g>
-  <!-- Noor Art watermark -->
-  <text x="300" y="700" text-anchor="middle" font-family="Georgia, serif" font-size="11" fill="#5c4f3a" letter-spacing="5">NOOR ART · SAMPLE</text>
-</svg>`)}`;
-
-    items = [{
-      id: 999999,
-      title: 'Bismillah — Gold on Black',
-      price: 'R450',
-      category: 'Calligraphy',
-      status: 'Available',
-      desc: 'A stunning Bismillah calligraphy piece in gold on a deep black background. Available as a digital print in A3 or A2 size, or framed.',
-      image: sampleSVG,
-      isSample: true
-    }];
-
+    const svg = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="600" height="750" viewBox="0 0 600 750"><defs><radialGradient id="bg" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#2c2318"/><stop offset="100%" stop-color="#0e0c09"/></radialGradient></defs><rect width="600" height="750" fill="url(#bg)"/><rect x="30" y="30" width="540" height="690" fill="none" stroke="#b8915a" stroke-width="1" opacity="0.5"/><g stroke="#b8915a" stroke-width="1.5" fill="none" opacity="0.8"><path d="M30,30 L70,30 M30,30 L30,70"/><path d="M570,30 L530,30 M570,30 L570,70"/><path d="M30,720 L70,720 M30,720 L30,680"/><path d="M570,720 L530,720 M570,720 L570,680"/></g><text x="300" y="280" text-anchor="middle" font-family="Georgia,serif" font-size="68" fill="#d4a96a" letter-spacing="6">بِسْمِ اللّٰهِ</text><text x="300" y="355" text-anchor="middle" font-family="Georgia,serif" font-size="36" fill="#b8915a" opacity="0.85" letter-spacing="4">الرَّحْمَٰنِ الرَّحِيمِ</text><line x1="160" y1="395" x2="440" y2="395" stroke="#b8915a" stroke-width="0.8" opacity="0.5"/><text x="300" y="440" text-anchor="middle" font-family="Georgia,serif" font-size="14" fill="#9a8c72" letter-spacing="3">In the name of Allah</text><text x="300" y="465" text-anchor="middle" font-family="Georgia,serif" font-size="14" fill="#9a8c72" letter-spacing="3">The Most Gracious, The Most Merciful</text><text x="300" y="710" text-anchor="middle" font-family="Georgia,serif" font-size="11" fill="#5c4a2e" letter-spacing="5">NOOR ART · SAMPLE</text></svg>`)}`;
+    items = [{ id: 999999, title: 'Bismillah — Gold on Black', price: 'R450', category: 'Calligraphy', status: 'Available', desc: 'A Bismillah calligraphy piece in gold on deep black. Available as A3 or A2 digital print, or framed.', image: svg, isSample: true }];
     renderGallery();
   }
 
-  // ── /admin ROUTING & LOGIN ──
-  const ADMIN_PASSWORD = 'noorart2025'; // ← change this to your password
+  // ── LOGIN & ROUTING ──
+  const ADMIN_PASSWORD = 'noorart2025';
 
   function checkRoute() {
-    const path = window.location.pathname;
     const hash = window.location.hash;
     const search = window.location.search;
-    if (
-      path.endsWith('/admin') ||
-      path.endsWith('/admin.html') ||
-      hash === '#admin' ||
-      search.includes('admin')
-    ) {
+    const path = window.location.pathname;
+    if (hash === '#admin' || search.includes('admin') || path.endsWith('/admin') || path.endsWith('/admin.html')) {
       document.body.style.overflow = 'hidden';
       document.getElementById('loginOverlay').style.display = 'flex';
     }
@@ -1290,21 +1218,73 @@
     }
   }
 
-  document.getElementById('loginPassword').addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') attemptLogin();
-  });
+  document.getElementById('loginPassword').addEventListener('keydown', e => { if (e.key === 'Enter') attemptLogin(); });
 
-  function toggleAdmin() {
-    document.getElementById('adminOverlay').classList.toggle('open');
-    document.body.style.overflow = document.getElementById('adminOverlay').classList.contains('open') ? 'hidden' : '';
+  // ── CAROUSEL IMAGE MANAGEMENT ──
+  let slideImages = JSON.parse(localStorage.getItem('noorart_slides') || '[null,null,null]');
+  let currentSlideTarget = 0;
+
+  function saveSlides() {
+    localStorage.setItem('noorart_slides', JSON.stringify(slideImages));
+  }
+
+  function triggerSlideUpload(idx) {
+    currentSlideTarget = idx;
+    document.getElementById('slideFileInput').click();
+  }
+
+  function handleSlideUpload(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      slideImages[currentSlideTarget] = e.target.result;
+      saveSlides();
+      applySlideImages();
+      updateCarouselSlots();
+      showToast(`✦ Slide ${currentSlideTarget + 1} image updated`);
+      input.value = '';
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function applySlideImages() {
+    slideImages.forEach((img, i) => {
+      const bg = document.getElementById(`slideBg${i}`);
+      const placeholder = document.getElementById(`slidePlaceholder${i}`);
+      if (img && bg) {
+        bg.style.backgroundImage = `url('${img}')`;
+        if (placeholder) placeholder.classList.add('hidden');
+      } else {
+        if (bg) bg.style.backgroundImage = '';
+        if (placeholder) placeholder.classList.remove('hidden');
+      }
+    });
+  }
+
+  function updateCarouselSlots() {
+    slideImages.forEach((img, i) => {
+      const slot = document.getElementById(`carouselSlot${i}`);
+      if (!slot) return;
+      if (img) {
+        slot.style.backgroundImage = `url('${img}')`;
+        slot.style.backgroundSize = 'cover';
+        slot.style.backgroundPosition = 'center';
+        slot.innerHTML = `<div style="position:absolute;inset:0;background:rgba(0,0,0,0.45);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;"><span style="color:white;font-size:10px;letter-spacing:1px;text-transform:uppercase;">Slide ${i+1}</span><span style="color:rgba(255,255,255,0.6);font-size:10px;">Click to change</span></div>`;
+      } else {
+        slot.style.backgroundImage = '';
+        slot.innerHTML = `<span style="font-size:20px;">🖼</span><span>Slide ${i+1}</span>`;
+      }
+    });
   }
 
   // ── INIT ──
   loadSampleIfEmpty();
-  if (items.length > 0 && !items[0].isSample) renderGallery();
-  else if (items.length > 0) renderGallery();
+  renderGallery();
+  applySlideImages();
+  updateCarouselSlots();
+  resetAutoplay();
   checkRoute();
-
 </script>
 </body>
 </html>
